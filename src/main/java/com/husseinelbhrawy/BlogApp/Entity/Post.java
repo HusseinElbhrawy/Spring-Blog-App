@@ -5,11 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "posts" , uniqueConstraints = @UniqueConstraint(columnNames = "title"))
-
-
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,4 +28,9 @@ public class Post {
 
     @Column(name = "content" , nullable = false )
     private  String content;
+
+    @OneToMany(mappedBy = "post" , fetch = FetchType.LAZY ,cascade = CascadeType.ALL , orphanRemoval = true)
+    //! When Remove Post , we will remove all comments of it
+    private Set<Comment> comment = new HashSet<>();
+
 }
