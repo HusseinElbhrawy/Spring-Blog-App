@@ -7,6 +7,7 @@ import com.husseinelbhrawy.BlogApp.Payload.LoginDTO;
 import com.husseinelbhrawy.BlogApp.Payload.RegisterDTO;
 import com.husseinelbhrawy.BlogApp.Repository.RolesRepository;
 import com.husseinelbhrawy.BlogApp.Repository.UserRepository;
+import com.husseinelbhrawy.BlogApp.Security.JWTTokenProvider;
 import com.husseinelbhrawy.BlogApp.Service.Base.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,25 +30,28 @@ public class AuthServiceImplementation implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RolesRepository rolesRepository;
+    private  final JWTTokenProvider jwtTokenProvider;
 
 
     @Autowired
-    public AuthServiceImplementation(AuthenticationManager authenticationManager, UserRepository userRepository, RolesRepository rolesRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImplementation(AuthenticationManager authenticationManager, UserRepository userRepository, RolesRepository rolesRepository, PasswordEncoder passwordEncoder, JWTTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.rolesRepository = rolesRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public ResponseEntity<Object> login(LoginDTO loginDTO) {
+    public String login(LoginDTO loginDTO) {
 
         //? authenticate method need Authentication in param , but Authentication is an interface, so we use UsernamePasswordAuthenticationToken
         Authentication authentication =    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsernameOrEmail(), loginDTO.getPassword()));
         SecurityContext securityContext =   SecurityContextHolder. getContext();
         securityContext.setAuthentication(authentication);
 
-        return  ResponseEntity.ok("Login Successful");
+
+        return jwtTokenProvider.generateToken(authentication);
     }
 
     @Override

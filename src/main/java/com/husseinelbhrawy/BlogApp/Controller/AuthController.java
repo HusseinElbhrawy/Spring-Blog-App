@@ -1,5 +1,6 @@
 package com.husseinelbhrawy.BlogApp.Controller;
 
+import com.husseinelbhrawy.BlogApp.Payload.JWTAuthResponse;
 import com.husseinelbhrawy.BlogApp.Payload.LoginDTO;
 import com.husseinelbhrawy.BlogApp.Payload.RegisterDTO;
 import com.husseinelbhrawy.BlogApp.Service.Base.AuthService;
@@ -22,8 +23,15 @@ public class AuthController {
     }
 
     @PostMapping(value = {"/login" , "/signin"})  //? use /login or /signin
-    public ResponseEntity<Object> login(@RequestBody LoginDTO loginParam){
-        return  ResponseEntity.ok(authService.login(loginParam));
+    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDTO loginParam){
+        String token = authService.login(loginParam);
+
+
+        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+
+        return  new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
+
     }
 
 
