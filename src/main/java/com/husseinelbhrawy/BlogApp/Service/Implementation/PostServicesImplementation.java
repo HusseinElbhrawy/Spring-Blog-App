@@ -1,11 +1,15 @@
 package com.husseinelbhrawy.BlogApp.Service.Implementation;
 
+import com.husseinelbhrawy.BlogApp.Entity.Comment;
 import com.husseinelbhrawy.BlogApp.Entity.Post;
 import com.husseinelbhrawy.BlogApp.Exceptions.ResourceNotFoundException;
+import com.husseinelbhrawy.BlogApp.Payload.CommentDTO;
 import com.husseinelbhrawy.BlogApp.Payload.PostDTO;
 import com.husseinelbhrawy.BlogApp.Payload.PostResponse;
+import com.husseinelbhrawy.BlogApp.Repository.CommentRepository;
 import com.husseinelbhrawy.BlogApp.Repository.PostRepository;
 import com.husseinelbhrawy.BlogApp.Service.Base.PostServices;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,15 +17,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServicesImplementation implements PostServices{
     private final PostRepository postRepository;
+    private  final CommentRepository commentRepository;
+    private  final ModelMapper modelMapper;
+
 
     @Autowired
-    public PostServicesImplementation(PostRepository postRepository) {
+    public PostServicesImplementation(PostRepository postRepository, CommentRepository commentRepository, ModelMapper modelMapper) {
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -76,8 +88,8 @@ public class PostServicesImplementation implements PostServices{
     @Override
     public PostDTO getPostById(long id) {
         Post optionalPost = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post" ,   "ID:"  ,  id));
+        System.out.println("Post Data  : " + optionalPost.getComments());
         return  mapToDTO(optionalPost);
-
     }
 
     @Override
@@ -100,20 +112,17 @@ public class PostServicesImplementation implements PostServices{
     }
 
     private PostDTO mapToDTO(Post post){
-        PostDTO postDTO = new PostDTO();
-        postDTO.setId(post.getId());
-        postDTO.setTitle(post.getTitle());
-        postDTO.setDescription(post.getDescription());
-        postDTO.setContent(post.getContent());
-        return postDTO;
+        System.out.println("{mapToDTO} : POST Comments" + post.getComments()    );
+        PostDTO postDTO = modelMapper.map(post , PostDTO.class);
+        System.out.println("{mapToDTO} : PostDTO Comments" + postDTO.getComments());
+        return  postDTO;
     }
 
     private Post mapToEntity(PostDTO postDTO){
-        Post post = new Post();
-        post.setTitle(postDTO.getTitle());
-        post.setDescription(postDTO.getDescription());
-        post.setContent(postDTO.getContent());
-        return  post;
+        System.out.println("{mapToDTO} : PostDTO Comments" + postDTO.getComments());
+        Post post = modelMapper.map(postDTO , Post.class);
+        System.out.println("{mapToDTO} : POST Comments" + post.getComments()    );
 
+        return  post;
     }
 }

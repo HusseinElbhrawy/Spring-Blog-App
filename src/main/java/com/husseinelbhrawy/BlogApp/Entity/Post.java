@@ -1,16 +1,16 @@
 package com.husseinelbhrawy.BlogApp.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "posts" , uniqueConstraints = @UniqueConstraint(columnNames = "title"))
-@Data
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post {
@@ -31,6 +31,6 @@ public class Post {
 
     @OneToMany(mappedBy = "post" , fetch = FetchType.LAZY ,cascade = CascadeType.ALL , orphanRemoval = true)
     //! When Remove Post , we will remove all comments of it
-    private Set<Comment> comment = new HashSet<>();
+    private Set<Comment> comments = new HashSet<>();
 
 }

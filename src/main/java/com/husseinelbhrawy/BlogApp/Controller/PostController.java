@@ -4,9 +4,11 @@ import com.husseinelbhrawy.BlogApp.Payload.PostDTO;
 import com.husseinelbhrawy.BlogApp.Payload.PostResponse;
 import com.husseinelbhrawy.BlogApp.Service.Base.PostServices;
 import com.husseinelbhrawy.BlogApp.Utils.AppConstants;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,8 +22,9 @@ public class PostController {
         this.postServices = postServices;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<PostDTO> createNewPost(@RequestBody PostDTO postDTO){
+    public ResponseEntity<PostDTO> createNewPost(@Valid @RequestBody PostDTO postDTO){
         PostDTO postDTO1 = postServices.createPost(postDTO);
         return new ResponseEntity<>(postDTO1 , HttpStatus.CREATED);
     }
@@ -41,11 +44,13 @@ public class PostController {
         return ResponseEntity.ok(postServices.getPostById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO , @PathVariable("id") long id){
+    public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO , @PathVariable("id") long id){
         return ResponseEntity.ok(postServices.updatePost(postDTO , id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable("id") long id){
         return ResponseEntity.ok(postServices.deletePost(id));
