@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/posts")
 public class PostController {
@@ -22,7 +24,7 @@ public class PostController {
         this.postServices = postServices;
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('admin')")
     @PostMapping
     public ResponseEntity<PostDTO> createNewPost(@Valid @RequestBody PostDTO postDTO){
         PostDTO postDTO1 = postServices.createPost(postDTO);
@@ -44,16 +46,21 @@ public class PostController {
         return ResponseEntity.ok(postServices.getPostById(id));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('admin')")
     @PutMapping("/{id}")
     public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO , @PathVariable("id") long id){
         return ResponseEntity.ok(postServices.updatePost(postDTO , id));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('admin')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable("id") long id){
         return ResponseEntity.ok(postServices.deletePost(id));
+    }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<PostDTO>> findByCategoryId(@PathVariable("id") long id){
+        return ResponseEntity.ok(postServices.findByCategoryId(id));
     }
 
 

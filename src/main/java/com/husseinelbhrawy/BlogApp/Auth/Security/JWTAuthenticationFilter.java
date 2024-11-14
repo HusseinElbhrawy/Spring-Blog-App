@@ -43,6 +43,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             //! Load the user associated with token
             var userDetails = this.userDetailsService.loadUserByUsername(username);
 
+            System.out.println("Account Role is " + userDetails.getAuthorities());
+
             //! Create Auth Token
             var authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 

@@ -66,8 +66,8 @@ public class SecurityConfig {
                         requests
                                 .requestMatchers("/api/**" , "/api/forgot-password").permitAll()
                                 .requestMatchers(  "/api/posts**").permitAll()
+//                                .requestMatchers("/api/categories/**").permitAll()
                                 .requestMatchers(HttpMethod.POST , "/api/auth/**").permitAll().anyRequest().authenticated()
-
                 )
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

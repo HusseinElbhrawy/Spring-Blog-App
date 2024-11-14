@@ -1,44 +1,43 @@
 package com.husseinelbhrawy.BlogApp.Service.Implementation;
 
-import com.husseinelbhrawy.BlogApp.Entity.Comment;
+import com.husseinelbhrawy.BlogApp.Entity.Category;
 import com.husseinelbhrawy.BlogApp.Entity.Post;
+import com.husseinelbhrawy.BlogApp.Exceptions.BlogAPIException;
 import com.husseinelbhrawy.BlogApp.Exceptions.ResourceNotFoundException;
-import com.husseinelbhrawy.BlogApp.Payload.CommentDTO;
 import com.husseinelbhrawy.BlogApp.Payload.PostDTO;
 import com.husseinelbhrawy.BlogApp.Payload.PostResponse;
+import com.husseinelbhrawy.BlogApp.Repository.CategoryRepository;
 import com.husseinelbhrawy.BlogApp.Repository.CommentRepository;
 import com.husseinelbhrawy.BlogApp.Repository.PostRepository;
 import com.husseinelbhrawy.BlogApp.Service.Base.PostServices;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PostServicesImplementation implements PostServices{
-    private final PostRepository postRepository;
+    private  final PostRepository postRepository;
     private  final CommentRepository commentRepository;
     private  final ModelMapper modelMapper;
+    private  final CategoryRepository categoryRepository;
 
 
-    @Autowired
-    public PostServicesImplementation(PostRepository postRepository, CommentRepository commentRepository, ModelMapper modelMapper) {
-        this.postRepository = postRepository;
-        this.commentRepository = commentRepository;
-        this.modelMapper = modelMapper;
+    private Category getCategoryById(long id){
+        return  categoryRepository.findById(id).orElseThrow(() -> new BlogAPIException(HttpStatus.NOT_FOUND , "Category With Id " + id + " Not Found"));
     }
 
     @Override
     public PostDTO createPost(PostDTO postDTO) {
         Post post = mapToEntity(postDTO);
+        post.setCategory(getCategoryById(postDTO.getCategoryId()));
         return  mapToDTO(postRepository.save(post));
     }
 
@@ -80,10 +79,12 @@ public class PostServicesImplementation implements PostServices{
     public PostDTO updatePost(PostDTO postDTO, long id) {
         //! Get Old Post
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post" ,   "ID:"  ,  id));
+
         //! Update Post
         post.setTitle(postDTO.getTitle());
         post.setDescription(postDTO.getDescription());
         post.setContent(postDTO.getContent());
+        post.setCategory(getCategoryById(postDTO.getCategoryId()));
         //! Save Post
         return  mapToDTO(postRepository.save(post));
     }
@@ -93,6 +94,14 @@ public class PostServicesImplementation implements PostServices{
         Post post =  postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Delete" ,   "ID:"  ,  id));
         postRepository.delete(post);
         return "Post Deleted Successfully With ID:" + id + " ✅ ";
+    }
+
+    @Override
+    public List<PostDTO> findByCategoryId(long categoryId) {
+        var category = getCategoryById(categoryId);
+        List<Post> allPosts = postRepository.findByCategoryId(category.getId()).orElseThrow(() -> new ResourceNotFoundException("Post" ,   "ID:"  ,  categoryId));
+        return allPosts.stream().map(this::mapToDTO).toList();
+
     }
 
     private PostDTO mapToDTO(Post post){

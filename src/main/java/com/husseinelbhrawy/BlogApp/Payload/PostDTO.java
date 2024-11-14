@@ -1,6 +1,8 @@
 package com.husseinelbhrawy.BlogApp.Payload;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -9,6 +11,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
+
 public class PostDTO {
     private  long id;
 
@@ -23,4 +26,7 @@ public class PostDTO {
 
     private  String content;
     private Set<CommentDTO> comments;
+
+    @JsonProperty("category_id")
+    private long categoryId;
 }

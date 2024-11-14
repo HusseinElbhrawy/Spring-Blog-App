@@ -4,6 +4,8 @@ package com.husseinelbhrawy.BlogApp.Service.Base;
 import com.husseinelbhrawy.BlogApp.Payload.PostDTO;
 import com.husseinelbhrawy.BlogApp.Payload.PostResponse;
 
+import java.util.List;
+
 
 public interface PostServices {
 
@@ -16,5 +18,7 @@ public interface PostServices {
     PostDTO updatePost(PostDTO postDTO, long id);
 
     String deletePost(long id);
+
+    List<PostDTO> findByCategoryId(long categoryId);
 }
 

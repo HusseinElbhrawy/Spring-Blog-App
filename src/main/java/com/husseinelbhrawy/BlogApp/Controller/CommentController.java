@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/posts/{postId}/comments")
 public class CommentController {
@@ -23,7 +21,7 @@ public class CommentController {
 
 
     @PostMapping
-    public ResponseEntity<CommentDTO> createComment(@PathVariable(value = "postId") Long postId,@Valid @RequestBody CommentDTO commentDTO) {
+    public ResponseEntity<CommentDTO> createComment(@PathVariable(value = "postId") Long postId, @Valid @RequestBody CommentDTO commentDTO) {
         return  new ResponseEntity<>(commentService.createComment(postId,commentDTO) , HttpStatus.CREATED);
     }
 
@@ -33,12 +31,12 @@ public class CommentController {
     }
 
     @GetMapping("/{commentId}")
-    public  ResponseEntity<CommentDTO> getCommentById(@PathVariable(value = "postId") Long postId,@PathVariable(value = "commentId") Long commentId) {
+    public  ResponseEntity<CommentDTO> getCommentById(@PathVariable(value = "postId") Long postId, @PathVariable(value = "commentId") Long commentId) {
         return  new ResponseEntity<>(commentService.getCommentById(postId,commentId) , HttpStatus.OK);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentDTO> updateComment(@PathVariable(value = "postId") Long postId,@PathVariable(value = "commentId") Long commentId,@Valid @RequestBody CommentDTO commentDTO) {
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable(value = "postId") Long postId, @PathVariable(value = "commentId") Long commentId, @Valid @RequestBody CommentDTO commentDTO) {
         return  new ResponseEntity<>(commentService.updateComment(postId,commentId,commentDTO) , HttpStatus.OK);
     }
 

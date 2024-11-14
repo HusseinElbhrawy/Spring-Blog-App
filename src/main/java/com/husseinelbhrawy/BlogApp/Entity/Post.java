@@ -15,9 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class Post {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private  long id;
     @Column(name = "title" , nullable = false )
@@ -32,5 +30,9 @@ public class Post {
     @OneToMany(mappedBy = "post" , fetch = FetchType.LAZY ,cascade = CascadeType.ALL , orphanRemoval = true)
     //! When Remove Post , we will remove all comments of it
     private Set<Comment> comments = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categories_id" , nullable = false)
+    private Category category;
 
 }

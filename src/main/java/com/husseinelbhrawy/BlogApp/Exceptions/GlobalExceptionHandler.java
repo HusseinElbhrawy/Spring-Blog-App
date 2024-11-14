@@ -1,6 +1,7 @@
 package com.husseinelbhrawy.BlogApp.Exceptions;
 
 import com.husseinelbhrawy.BlogApp.Payload.ErrorDetails;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -40,11 +41,11 @@ public class GlobalExceptionHandler  {
         ErrorDetails errorDetails = new ErrorDetails();
 
         errorDetails.setMessage(exception.getMessage());
-        errorDetails.setStatusCode(HttpStatus.NOT_FOUND.value());
+        errorDetails.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         errorDetails.setTimeStamp(new Date());
         errorDetails.setDetails(webRequest.getDescription(false));
 
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -61,13 +62,26 @@ public class GlobalExceptionHandler  {
         return  new ResponseEntity<>(errors , HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorDetails> handleDataIntegrityViolationException(DataIntegrityViolationException exception , WebRequest webRequest){
+
+
+        ErrorDetails errorDetails =  ErrorDetails.builder()
+                .message(exception.getMostSpecificCause().getLocalizedMessage())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .timeStamp(new Date())
+                .details(webRequest.getDescription(false))
+                .build();
+
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<Object> handleAuthorizationDeniedException(AuthorizationDeniedException exception , WebRequest webRequest){
 
 
         ErrorDetails errorDetails = new ErrorDetails();
-
-
 
 //        errorDetails.setMessage(exception.getMessage());
         errorDetails.setMessage("You Don't have permission to access this resource");

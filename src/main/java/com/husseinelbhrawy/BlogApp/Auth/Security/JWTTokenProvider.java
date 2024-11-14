@@ -59,7 +59,6 @@ public class JWTTokenProvider {
     //! Validate JWT Token
     public boolean validateToken(String token){
         try {
-            System.out.println("Validating token: " + token);
             Jwts.parser().verifyWith((SecretKey) key())
                     .build().parse(token);
 

@@ -1,4 +1,4 @@
-package com.husseinelbhrawy.BlogApp.Auth.Security;
+package com.husseinelbhrawy.BlogApp.Auth.Services.Implementation;
 
 import com.husseinelbhrawy.BlogApp.Auth.Repository.UserRepository;
 
