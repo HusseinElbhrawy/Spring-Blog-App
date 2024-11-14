@@ -1,6 +1,7 @@
-package com.husseinelbhrawy.BlogApp.Security;
+package com.husseinelbhrawy.BlogApp.Auth.Security;
 
 
+import com.husseinelbhrawy.BlogApp.Auth.Entity.User;
 import com.husseinelbhrawy.BlogApp.Exceptions.BlogAPIException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -23,9 +24,9 @@ public class JWTTokenProvider {
     private  long jwtExpirationDate;
 
     //! Generate JWT Token
-    public  String generateToken(Authentication authentication) {
+    public  String generateToken(User user) {
 
-        String username = authentication.getName();
+        String username = user.getName();
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
 
@@ -58,6 +59,7 @@ public class JWTTokenProvider {
     //! Validate JWT Token
     public boolean validateToken(String token){
         try {
+            System.out.println("Validating token: " + token);
             Jwts.parser().verifyWith((SecretKey) key())
                     .build().parse(token);
 

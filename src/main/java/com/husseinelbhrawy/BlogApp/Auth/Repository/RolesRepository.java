@@ -1,6 +1,6 @@
-package com.husseinelbhrawy.BlogApp.Repository;
+package com.husseinelbhrawy.BlogApp.Auth.Repository;
 
-import com.husseinelbhrawy.BlogApp.Entity.Roles;
+import com.husseinelbhrawy.BlogApp.Auth.Entity.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -22,7 +22,7 @@ public class PostController {
         this.postServices = postServices;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<PostDTO> createNewPost(@Valid @RequestBody PostDTO postDTO){
         PostDTO postDTO1 = postServices.createPost(postDTO);
@@ -44,13 +44,13 @@ public class PostController {
         return ResponseEntity.ok(postServices.getPostById(id));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO , @PathVariable("id") long id){
         return ResponseEntity.ok(postServices.updatePost(postDTO , id));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable("id") long id){
         return ResponseEntity.ok(postServices.deletePost(id));

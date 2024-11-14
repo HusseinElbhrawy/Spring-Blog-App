@@ -1,4 +1,4 @@
-package com.husseinelbhrawy.BlogApp.Security;
+package com.husseinelbhrawy.BlogApp.Auth.Security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,4 +18,5 @@ public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
     }
+
 }

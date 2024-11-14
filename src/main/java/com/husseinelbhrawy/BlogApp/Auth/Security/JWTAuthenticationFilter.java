@@ -1,4 +1,4 @@
-package com.husseinelbhrawy.BlogApp.Security;
+package com.husseinelbhrawy.BlogApp.Auth.Security;
 
 import ch.qos.logback.core.util.StringUtil;
 import jakarta.servlet.FilterChain;
@@ -50,7 +50,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
             //! Set the authentication in the context
             SecurityContextHolder.getContext().setAuthentication(authToken);
-//            request.setAttribute("authToken", authToken);
         }
         filterChain.doFilter(request, response);
     }

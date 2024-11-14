@@ -54,36 +54,20 @@ public class PostServicesImplementation implements PostServices{
 
         List<PostDTO> content =   listOfPost.stream().map(this::mapToDTO).toList();
 
-        PostResponse response = new PostResponse();
-        response.setContent(content);
-        response.setLast(postPage.isLast());
-        response.setPageNo(pageNumber);
-        response.setPageSize(pageSize);
-        response.setTotalPages(postPage.getTotalPages());
-        response.setTotalElements(postPage.getTotalElements());
 
-        return response;
+
+        return PostResponse.builder()
+                .content(content)
+                .last(postPage.isLast())
+                .pageNo(pageNumber)
+                .pageSize(pageSize)
+                .totalPages(postPage.getTotalPages())
+                .totalElements(postPage.getTotalElements())
+                .build();
     }
 
 
 
-//    @Override
-//    public PostDTO getPostById(long id) {
-//        Post post = postRepository.findById(id).get();
-//        return mapToDTO(post);
-//
-//    }
-
-//    @Override
-//    public PostDTO getPostById(long id) {
-//        Optional<Post> optionalPost = postRepository.findById(id);
-//        if (optionalPost.isPresent()) {
-//            Post post = optionalPost.get();
-//            return mapToDTO(post);
-//        } else {
-//            throw new ResourceNotFoundException("Post" ,   "ID:"  ,  id);
-//        }
-//    }
 
     @Override
     public PostDTO getPostById(long id) {
