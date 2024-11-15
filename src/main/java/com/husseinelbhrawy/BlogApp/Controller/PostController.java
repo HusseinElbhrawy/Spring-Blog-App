@@ -4,8 +4,13 @@ import com.husseinelbhrawy.BlogApp.Payload.PostDTO;
 import com.husseinelbhrawy.BlogApp.Payload.PostResponse;
 import com.husseinelbhrawy.BlogApp.Service.Base.PostServices;
 import com.husseinelbhrawy.BlogApp.Utils.AppConstants;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,18 +19,41 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/posts")
+@RequestMapping("api/v1/posts")
+@RequiredArgsConstructor
+@Tag(
+        name = "Posts API",
+        description = "This API for CRUD operation on Posts"
+)
 public class PostController {
 
     private  final PostServices postServices;
 
-    @Autowired
-    public PostController(PostServices postServices) {
-        this.postServices = postServices;
-    }
-
     @PreAuthorize("hasAuthority('admin')")
     @PostMapping
+    @Operation(
+        summary = "Create new Post",
+        description = "Create new Post",
+        extensions = {
+                @Extension(
+                        name = "Authorization",
+                        properties = {
+                                @ExtensionProperty(name = "type", value = "apiKey"),
+                                @ExtensionProperty(name = "name", value = "Authorization"),
+                                @ExtensionProperty(name = "in", value = "header")
+                        }
+                )
+        },
+            hidden = false,
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @io.swagger.v3.oas.annotations.media.Content(
+                            mediaType = "application/json",
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = PostDTO.class)
+                    )
+            )
+
+    )
+    @ApiResponse(responseCode = "201", description = "Created")
     public ResponseEntity<PostDTO> createNewPost(@Valid @RequestBody PostDTO postDTO){
         PostDTO postDTO1 = postServices.createPost(postDTO);
         return new ResponseEntity<>(postDTO1 , HttpStatus.CREATED);

@@ -1,5 +1,6 @@
 package com.husseinelbhrawy.BlogApp.Payload;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@Schema(name = "Comments" ,hidden = true)
 public class CommentDTO {
     private  long id;
 

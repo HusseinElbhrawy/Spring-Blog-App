@@ -64,10 +64,26 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((requests) ->
                         requests
-                                .requestMatchers("/api/**" , "/api/forgot-password").permitAll()
-                                .requestMatchers(  "/api/posts**").permitAll()
-//                                .requestMatchers("/api/categories/**").permitAll()
-                                .requestMatchers(HttpMethod.POST , "/api/auth/**").permitAll().anyRequest().authenticated()
+                                .requestMatchers("/api/v1/**" , "/api/forgot-password").permitAll()
+                                .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/v3/**" ,
+                                        "/v3/api-docs",
+                                        "/swagger-resources/**",
+                                        "/swagger-ui/index.html",
+                                        "/v2/api-docs",
+                                        "/v3/api-docs",
+                                        "/v3/api-docs/**",
+                                        "/swagger-resources",
+                                        "/swagger-resources/**",
+                                        "/configuration/ui",
+                                        "/configuration/security",
+                                        "/swagger-ui/**",
+                                        "/webjars/**",
+                                        "/swagger-ui.html"
+                                ).permitAll()
+                                .requestMatchers(  "/api/v1/posts**").permitAll()
+                                .requestMatchers(HttpMethod.POST , "/api/v1/auth/**").permitAll().anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -76,27 +92,7 @@ public class SecurityConfig {
         http.addFilterBefore(jwtAuthenticationFilter , UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.authorizeHttpRequests(authorize -> authorize.
-//                requestMatchers(HttpMethod.GET , "/api/**")
-//                        .permitAll()
-//                        .requestMatchers(HttpMethod.POST , "/api/auth/**")
-//                        .permitAll()
-//                        .anyRequest()
-//                        .authenticated()).exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//
-//
-//        http.addFilterBefore(jwtAuthenticationFilter , UsernamePasswordAuthenticationFilter.class);
-//
-//        http.httpBasic(Customizer.withDefaults());
-//
-//        http.csrf(AbstractHttpConfigurer::disable);
-//
-//
-//        return  http.build();
-//    }
+
 
 
 
